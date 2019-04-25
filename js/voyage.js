@@ -13,15 +13,22 @@ class SejourService {
         this.sejour = [new Sejour('barcelone', 120), new Sejour('Paris', 500)];
     }
     rechercherParNom(nom) {
-        let elementTrouve;
-        this.sejour.forEach(element => {
-            if (element.nom == nom) {
-                elementTrouve = element;
-            }
+        return new Promise((resolve, reject) => {
+            let objetTrouve;
+            this.sejour.forEach(element => {
+                if (element.nom == nom) {
+                    objetTrouve = element;
+                    resolve(objetTrouve);
+                }
+                else {
+                    reject(`le séjour  ${nom} est introuvable`);
+                }
+            });
         });
-        return elementTrouve;
     }
 }
-let a = new SejourService();
-const sejourTrouve = a.rechercherParNom('Paris');
-console.log(sejourTrouve);
+const service = new SejourService();
+const promises$ = service.rechercherParNom('barcelone');
+promises$
+    .then(element => console.log('Séjour trouvé', element))
+    .catch(err => console.log('OOps', err));
